@@ -63,6 +63,11 @@ public class SheetMenuOptions
     public bool SortRangeEnabled { get; set; } = true;
 
     /// <summary>
+    /// Enables "sort" for rows on range selections
+    /// </summary>
+    public bool SortRowsEnabled { get; set; } = true;
+
+    /// <summary>
     /// Enables "Filter columns" on column selections
     /// </summary>
     public bool FilterColumnEnabled { get; set; } = true;
@@ -80,6 +85,7 @@ public class SheetMenuOptions
                other.HideRowsEnabled == HideRowsEnabled &&
                other.FilterColumnEnabled == FilterColumnEnabled &&
                other.SortRangeEnabled == SortRangeEnabled &&
+               other.SortRowsEnabled == SortRowsEnabled &&
                other.ContextMenuEnabled == ContextMenuEnabled &&
                other.HeaderMenuEnabled == HeaderMenuEnabled;
     }

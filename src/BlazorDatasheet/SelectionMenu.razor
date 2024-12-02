@@ -112,16 +112,24 @@
             }
         }
 
-        @if (MenuOptions.SortRangeEnabled)
+        @if ((MenuOptions.SortRangeEnabled || MenuOptions.SortRowsEnabled) && sheet.Selection.ActiveRegion.Height > 1)
         {
-            <SheetMenuDivider/>
+            <SheetMenuDivider />
             <SheetSubMenu Label="Sort">
-                <SheetMenuItem OnClick="() => sheet.SortRange(sheet.Selection.ActiveRegion)">Sort Ascending
-                </SheetMenuItem>
-                <SheetMenuItem
-                    OnClick="() => sheet.SortRange(sheet.Selection.ActiveRegion, new List<ColumnSortOptions>() { new ColumnSortOptions(0, false) })">
-                    Sort Descending
-                </SheetMenuItem>
+                @if (MenuOptions.SortRangeEnabled)
+                {
+                    <SheetMenuItem OnClick="() => sheet.SortRange(sheet.Selection.ActiveRegion)">Sort Ascending</SheetMenuItem>
+                    <SheetMenuItem OnClick="() => sheet.SortRange(sheet.Selection.ActiveRegion, new List<ColumnSortOptions>() { new ColumnSortOptions(0, false) })">Sort Descending</SheetMenuItem>
+                }
+                @if (MenuOptions.SortRowsEnabled && sheet.Selection.ActiveRegion.Height > 1)
+                {
+                    if (MenuOptions.SortRangeEnabled)
+                    {
+                        <SheetMenuDivider />
+                    }
+                    <SheetMenuItem OnClick="() => sheet.SortRange(sheet.Range(Axis.Row, sheet.Selection.ActiveRegion.Top, sheet.Selection.ActiveRegion.Bottom)!.Region, new List<ColumnSortOptions>() { new ColumnSortOptions(sheet.Selection.ActiveCellPosition.col, true) })">Sort Rows Ascending</SheetMenuItem>
+                    <SheetMenuItem OnClick="() => sheet.SortRange(sheet.Range(Axis.Row, sheet.Selection.ActiveRegion.Top, sheet.Selection.ActiveRegion.Bottom)!.Region, new List<ColumnSortOptions>() { new ColumnSortOptions(sheet.Selection.ActiveCellPosition.col, false) })">Sort Rows Descending</SheetMenuItem>
+                }
             </SheetSubMenu>
         }
 

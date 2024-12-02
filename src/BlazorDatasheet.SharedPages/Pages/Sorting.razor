@@ -1,0 +1,59 @@
+@page "/Sorting"
+@using System.Diagnostics
+@using BlazorDatasheet.Core.Data
+@using BlazorDatasheet.Core.Data.Filter
+@using BlazorDatasheet.Formula.Core
+@using BlazorDatasheet.Menu
+
+<h1>Sorting</h1>
+
+<p>Demonstration of the sorting abilities</p>
+<em>(select range of cells across rows display)</em>
+
+<div>
+    <input id="sticky-headings" type="checkbox" @bind="menuOptions.SortRangeEnabled" />
+    <label for="sticky-headings">CanUserSort</label>
+</div>
+<div>
+    <input id="sticky-headings" type="checkbox" @bind="menuOptions.SortRowsEnabled" />
+    <label for="sticky-headings">CanUserSortRows</label>
+</div>
+<Datasheet @ref="_datasheet"
+           Sheet="Sheet"
+           MenuOptions="@menuOptions"
+           Virtualise="true" />
+
+@code {
+    private Datasheet _datasheet;
+    private Sheet Sheet = new(500, 10);
+    private Random Random = new();
+    private SheetMenuOptions menuOptions = new SheetMenuOptions();
+
+
+    protected override void OnInitialized()
+    {
+        Sheet.Commands.PauseHistory();
+        Sheet.BatchUpdates();
+        var values = new CellValue[500][];
+        for (int r = 0; r < values.Length; r++)
+            values[r] = new CellValue[10];
+
+        for (int i = 0; i < Sheet.NumCols; i++)
+        {
+            for (int j = 0; j < Sheet.NumRows; j++)
+            {
+                int num = (i % 2 == 1) ? 500 - j : j;
+                values[j][i] = CellValue.Number((i * 1000 + num));
+            }
+        }
+
+        Sheet.Cells.SetValues(0, 0, values);
+
+        Sheet.EndBatchUpdates();
+        Sheet.Commands.ResumeHistory();
+        Sheet.ScreenUpdating = true;
+
+        base.OnInitialized();
+    }
+
+}
